@@ -1,3 +1,4 @@
+import "jsr:@std/dotenv/load"
 import { initializeApp } from "npm:firebase/app"
 import { getDatabase, ref, set } from "npm:firebase/database"
 import { getFirestore, collection, getDocs } from "npm:firebase/firestore/lite"
@@ -15,23 +16,21 @@ const app = initializeApp(firebaseConfig)
 const firestore = getFirestore(app)
 const database = getDatabase(app)
 
-async function getEntryStructure() {
+async function fetchEntryStructure() {
     const entryList = await fetchEntries()
     const entry = entryList[0]
-
     const structure = entry
-
     return structure
 }
 
-async function fetchEntries() {
-    const entries = collection(firestore, Deno.env.get("books") ?? "")
+export async function fetchEntries() {
+    const entries = collection(firestore, Deno.env.get("collection") ?? "")
     const entrySnapshot = await getDocs(entries)
     const entryList = entrySnapshot.docs.map(doc => doc.data())
     return entryList
 }
 
-export async function createNewEntry(id: string, data: any) {
+export function createNewEntry(id: string, data: any) {
     const collection = Deno.env.get("collection")
     set(ref(database, collection + `/${id}`), data)
         .then(() => 

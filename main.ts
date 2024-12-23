@@ -1,8 +1,21 @@
-export function add(a: number, b: number): number {
-  return a + b;
+import { route, type Route } from "@std/http/unstable-route"
+import { createNewEntry } from "./src/firebase.ts"
+
+const routes: Route[] = [
+	{
+		method: "GET",
+		pattern: new URLPattern({ pathname: "/" }),
+		handler: () => new Response("The interface"),
+	},
+	{
+		method: "POST",
+		pattern: new URLPattern({ pathname: "add" }),
+		handler: () => new Response("add new")
+	}
+]
+
+function defaultHandler(_request: Request) {
+	return new Response("Not found", { status: 404 })
 }
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+Deno.serve(route(routes, defaultHandler))

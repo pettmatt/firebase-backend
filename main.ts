@@ -1,5 +1,5 @@
 import { route, type Route } from "@std/http/unstable-route"
-import { fetchEntries } from "./src/firebase.ts"
+import { fetchEntries, fetchEntryStructure } from "./src/firebase.ts"
 
 const routes: Route[] = [
 	{
@@ -17,9 +17,23 @@ const routes: Route[] = [
 		pattern: new URLPattern({ pathname: "/entries" }),
 		handler: async () => {
 			const entries = await fetchEntries()
-			return new Response(`entries: ${ JSON.stringify(entries) }`)
+			return new Response(JSON.stringify(entries), {
+				headers: { "Content-Type": "application/json" },
+				status: 200
+			})
 		}
 	},
+	{
+		method: "GET",
+		pattern: new URLPattern({ pathname: "/entry-structure"}),
+		handler: async () => {
+			const structure = await fetchEntryStructure()
+			return new Response(JSON.stringify(structure), {
+				headers: { "Content-Type": "application/json" },
+				status: 200
+			})
+		}
+	}
 ]
 
 function defaultHandler(_request: Request) {

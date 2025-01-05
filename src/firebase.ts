@@ -16,10 +16,20 @@ const app = initializeApp(firebaseConfig)
 const firestore = getFirestore(app)
 const database = getDatabase(app)
 
-async function fetchEntryStructure() {
-    const entryList = await fetchEntries()
-    const entry = entryList[0]
-    const structure = entry
+export async function fetchEntryStructure() {
+    const entries = collection(firestore, Deno.env.get("collection") ?? "")
+    const entrySnapshot = await getDocs(entries)
+    const structure = entrySnapshot.docs.map(doc => {
+		const data = doc.data()
+		const entries = Object.entries(data)
+		const structure: Record<string, any> = {}
+
+		for (const [key, value] of entries) {
+			structure[key] = typeof value
+		}
+
+		return structure
+	})
     return structure
 }
 

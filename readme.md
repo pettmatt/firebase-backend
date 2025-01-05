@@ -15,10 +15,10 @@ deno test
 ## .env
 
 ```sh
-apiKey= ""
-authDomain= ""
-projectId= ""
-storageBucket= ""
-messagingSenderId= ""
-appId= ""
+firebase_API_key=""
+firebase_auth_domain=""
+firebase_project_id=""
+storage_bucket=""
+messaging_sender_id=""
+app_id=""
 ```
